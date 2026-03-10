@@ -1,0 +1,43 @@
+@startuml
+' Paramètres d'affichage pour rendre le diagramme plus propre
+left to right direction
+skinparam packageStyle rectangle
+
+' L'acteur principal
+actor "Utilisateur\n(Étudiant, Dev, Chef de projet)" as User
+
+' Le périmètre de ton application
+package "Application de Gestion de Tâches" {
+  
+  ' --- Définition de tous les cas d'utilisation ---
+  
+  usecase "S'inscrire" as UC_Inscrire
+  usecase "Se connecter\n(S'authentifier)" as UC_Connecter
+  
+  usecase "Créer une tâche" as UC_Creer
+  usecase "Modifier une tâche" as UC_Modifier
+  usecase "Supprimer une tâche" as UC_Supprimer
+  
+  usecase "Organiser ses tâches\n(Catégories & Statuts)" as UC_Organiser
+  usecase "Consulter le tableau de bord" as UC_Dashboard
+}
+
+' --- Les actions directes de l'utilisateur ---
+' (Ce que l'utilisateur a l'intention de faire)
+User --> UC_Inscrire
+User --> UC_Connecter
+User --> UC_Creer
+User --> UC_Modifier
+User --> UC_Supprimer
+User --> UC_Organiser
+User --> UC_Dashboard
+
+' --- Les relations <<include>> (Passages obligatoires) ---
+' La flèche pointe TOUJOURS vers le cas inclus (celui dont on a besoin)
+UC_Creer ..> UC_Connecter : <<include>>
+UC_Modifier ..> UC_Connecter : <<include>>
+UC_Supprimer ..> UC_Connecter : <<include>>
+UC_Organiser ..> UC_Connecter : <<include>>
+UC_Dashboard ..> UC_Connecter : <<include>>
+
+@enduml

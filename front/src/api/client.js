@@ -1,15 +1,15 @@
 import axios from 'axios';
 
-// Création d'une instance Axios pointant vers notre backend
+// Création d'une instance Axios configurée pour l'API backend
 const apiClient = axios.create({
-  baseURL: 'http://localhost:3000/api', // L'URL serveur Express
+  baseURL: 'http://localhost:3000/api', // URL du serveur Express
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true // Autorise l'envoi et la réception de cookies
+  withCredentials: true // Autorise l'inclusion des cookies dans les requêtes cross-origin
 });
 
-// Intercepteur pour injecter automatiquement le token JWT s'il existe
+// Intercepteur de requête pour l'injection automatique du token JWT d'accès
 apiClient.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -21,31 +21,31 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Intercepteur pour gérer l'expiration du Access Token (401)
+// Intercepteur de réponse pour la gestion de l'expiration du token d'accès (erreur 401)
 apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    // Si on a un 401 et qu'on a pas déjà essayé de refresh (évite les boucles infinies)
+    // Vérification du code 401 et de l'absence de tentative de rafraîchissement préalable (prévention des boucles infinies)
     if (error.response?.status === 401 && !originalRequest._retry && originalRequest.url !== '/auth/login') {
-      originalRequest._retry = true; // Marque la requête comme déjà tentée
+      originalRequest._retry = true; // Marquage de la requête indiquant qu'une tentative a été effectuée
 
       try {
-        // Appel en arrière-plan pour obtenir un nouveau token (le cookie est envoyé automatiquement)
+        // Requête de renouvellement du token (le cookie de rafraîchissement est inclus automatiquement)
         const res = await axios.post('http://localhost:3000/api/auth/refresh', {}, { withCredentials: true });
         
-        // Sauvegarde le nouveau token et met à jour le header de l'ancienne requête
+        // Stockage du nouveau token et mise à jour de l'en-tête de la requête initiale
         localStorage.setItem('token', res.data.token);
         originalRequest.headers.Authorization = `Bearer ${res.data.token}`;
         
-        // Relance la requête d'origine incognito
+        // Réexécution de la requête initiale avec le nouveau token
         return apiClient(originalRequest);
       } catch (refreshError) {
-        // Si le Refresh Token est également expiré, déconnexion dure
+        // En cas d'échec du rafraîchissement, suppression des données locales
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.href = '/login'; // Redirige vers le login
+        window.location.href = '/login'; // Redirection vers la page d'authentification
         return Promise.reject(refreshError);
       }
     }

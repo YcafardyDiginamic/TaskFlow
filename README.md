@@ -5,7 +5,7 @@ Elle dispose d'un backend robuste en **Node.js/Express** et d'une interface mode
 
 ## 🛠 Prérequis
 
-Avant de commencer, assurez-vous d'avoir installé sur votre machine :
+Prérequis logiciels requis :
 - **Node.js** (v18 ou supérieur recommandé)
 - **MongoDB** (en local ou via un cluster MongoDB Atlas)
 - **Git**

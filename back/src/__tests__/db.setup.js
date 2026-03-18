@@ -5,8 +5,8 @@ const mongoose = require('mongoose');
  */
 const connect = async () => {
   try {
-    // Utilise une BDD de test pour ne pas écraser les données de développement avec le dropDatabase
-    // On ajoute JEST_WORKER_ID pour que chaque processus de test en parallèle ait sa propre base isolée
+    // Utilisation d'une base de données dédiée aux tests pour éviter l'altération des données de développement lors du dropDatabase
+    // Intégration de JEST_WORKER_ID pour garantir l'isolation des bases de données lors de l'exécution parallèle des tests
     const uri = process.env.MONGO_URI_TEST || `mongodb://127.0.0.1:27017/taskflow_test_${process.env.JEST_WORKER_ID || '1'}`;
     await mongoose.connect(uri);
   } catch (error) {

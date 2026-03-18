@@ -30,8 +30,7 @@
         "statements": 70
       }
     },
-    "testTimeout": 10000,
-    "runInBand": true
+    "testTimeout": 10000
   },
   "repository": {
     "type": "git",

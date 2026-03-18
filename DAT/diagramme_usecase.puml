@@ -1,0 +1,52 @@
+@startuml
+' Paramètres d'affichage
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Utilisateur" as User
+
+package "Application de Gestion de Tâches" {
+  
+  ' --- Authentification ---
+  usecase "S'inscrire" as UC_Inscrire
+  usecase "Se connecter" as UC_Connecter
+  usecase "S'authentifier" as UC_Auth
+  
+  ' --- Base : Tableau de bord ---
+  usecase "Consulter le tableau de bord\n(Lister mes tâches)" as UC_Dashboard
+  
+  ' --- Extensions directes du tableau de bord ---
+  usecase "Créer une tâche" as UC_Creer
+  usecase "Modifier une tâche" as UC_Modifier
+  usecase "Supprimer une tâche" as UC_Supprimer
+  usecase "Organisation des tâches" as UC_Organiser
+  
+  ' --- Extensions de l'organisation ---
+  usecase "Catégoriser une tâche" as UC_Categoriser
+  usecase "Statuer une tâche" as UC_Statuer
+}
+
+' --- Les actions directes de l'utilisateur ---
+User --> UC_Inscrire
+User --> UC_Connecter
+User --> UC_Dashboard
+
+' --- Les relations <<include>> (Passages obligatoires) ---
+UC_Inscrire ..> UC_Auth : <<include>>
+UC_Connecter ..> UC_Auth : <<include>>
+
+' Optionnel mais souvent attendu : on doit être connecté pour voir le dashboard
+' UC_Dashboard ..> UC_Connecter : <<include>>
+
+' --- Les relations <<extend>> vers le Tableau de bord ---
+' La flèche part de l'extension et pointe vers le cas de base
+UC_Creer ..> UC_Dashboard : <<extend>>
+UC_Modifier ..> UC_Dashboard : <<extend>>
+UC_Supprimer ..> UC_Dashboard : <<extend>>
+UC_Organiser ..> UC_Dashboard : <<extend>>
+
+' --- Les relations <<extend>> vers l'Organisation ---
+UC_Categoriser ..> UC_Organiser : <<extend>>
+UC_Statuer ..> UC_Organiser : <<extend>>
+
+@enduml

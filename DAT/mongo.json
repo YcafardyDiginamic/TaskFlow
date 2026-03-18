@@ -1,0 +1,27 @@
+{
+  "Collection: users": {
+    "_id": "ObjectId('...')",
+    "email": "student@taskflow.com",      "//": "Indexé, Unique",
+    "password": "$2b$10$hachage...",
+    "createdAt": "2026-03-12T12:00:00Z"
+  },
+
+  "Collection: categories": {
+    "_id": "ObjectId('...')",
+    "name": "Projet de Fin d'Étude",
+    "color": "#FF5733",
+    "userId": "ObjectId('user_id')",       "//": "Référence -> users"
+  },
+
+  "Collection: tasks": {
+    "_id": "ObjectId('...')",
+    "title": "Rédiger le DAT",
+    "description": "Finaliser la section 6 du document d'architecture...",
+    "status": "In Progress",              "//": "Indexé pour les filtres (ex: Todo, In Progress, Done)",
+    "dueDate": "2026-03-15T00:00:00Z",
+    "categoryId": "ObjectId('cat_id')",   "//": "Référence -> categories (Optionnel)",
+    "userId": "ObjectId('user_id')",      "//": "Référence -> users (Indexé)",
+    "createdAt": "2026-03-12T14:00:00Z",
+    "updatedAt": "2026-03-12T15:30:00Z"
+  }
+}
